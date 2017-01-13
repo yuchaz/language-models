@@ -12,7 +12,7 @@ def train_language_models(corpus):
     bigrams_list_2_start = []
     trigrams_full_list = []
     for sentence in corpus:
-        tokens = sentence.split(' ')[0:-1]
+        tokens = sentence.split(' ')
         tokens.append(STOP_SYMBOL)
         unigrams_list_no_start.extend(tokens)
         tokens.insert(0,START_SYMBOL)
