@@ -7,9 +7,14 @@ DEV_CORPUS = CORPUS_PATH+'brown.dev.txt'
 TEST_CORPUS = CORPUS_PATH+'brown.test.txt'
 
 def main():
-    training_corpus = load_corpus(TRAINING_CORPUS)
-    unigram_p, bigram_p, trigram_p = train_language_models(training_corpus)
-    print unigram_p
+    try:
+        training_corpus = load_corpus(TRAINING_CORPUS)
+        unigram_p, bigram_p, trigram_p = train_language_models(training_corpus)
+        # print unigram_p
+        dev_corpus = load_corpus(DEV_CORPUS)
+    except RuntimeError as error:
+        print error
+
 
 if __name__ == '__main__':
     main()
