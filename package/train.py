@@ -2,6 +2,7 @@ import nltk
 import numpy
 import math
 from package.generate_ngram import generate_ngram
+from package.frequency_distribution import calc_freq_dist
 
 START_SYMBOL = '*'
 STOP_SYMBOL = 'STOP'
@@ -33,6 +34,6 @@ def train_ngram_model(corpus, n):
         n_gram_list.extend(n_gram_model)
 
     if n != 1:
-        return dict(nltk.FreqDist(n_gram_list)), dict(nltk.FreqDist(n_1_gram_list))
+        return calc_freq_dist(n_gram_list), calc_freq_dist(n_1_gram_list)
     else:
-        return dict(nltk.FreqDist(n_gram_list)), len(n_gram_list)
+        return calc_freq_dist(n_gram_list), len(n_gram_list)
