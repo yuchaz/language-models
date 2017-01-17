@@ -2,14 +2,11 @@ import numpy
 import math
 from package.generate_ngram import generate_ngram
 from package.frequency_distribution import calc_freq_dist
-import re
-import pdb
+from package.oov_words_handling import replace_low_freq_words
 
 START_SYMBOL = '*'
 STOP_SYMBOL = 'STOP'
-UNK_SYMBOL = '<UNK>'
 MAXIMUM_TRAIN_N_GRAM = 3
-UNK_THRESHOLD = 3
 
 def train_language_models(corpus):
     new_corpus = replace_low_freq_words(corpus)
@@ -35,14 +32,3 @@ def train_ngram_model(corpus, n):
         return {k: math.log( float(v)/n_1_gram_freq_dist[tuple(k[:n-1])], 2) for k,v in n_gram_freq_dist.items()}
     else:
         return {k: math.log( float(v)/len(n_gram_list), 2) for k,v in n_gram_freq_dist.items()}
-
-def replace_low_freq_words(corpus):
-    unigram_list = []
-    for sentence in corpus:
-        tokens = sentence.split(' ')+[STOP_SYMBOL]
-        unigram_list.extend(tokens)
-    unigram_freq_dist = calc_freq_dist(unigram_list)
-    words_to_replace = [k for k,v in unigram_freq_dist.items() if v <= UNK_THRESHOLD]
-    replaced_regex = re.compile('|'.join(map(re.escape, words_to_replace)))
-    replaced_corpus = [replaced_regex.sub(UNK_SYMBOL,sentence) for sentence in corpus]
-    return replaced_corpus
