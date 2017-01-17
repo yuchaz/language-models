@@ -1,4 +1,3 @@
-import nltk
 import numpy
 import math
 from package.generate_ngram import generate_ngram
@@ -23,10 +22,8 @@ def train_ngram_model(corpus, n):
     for sentence in corpus:
         tokens = sentence.split(' ')
         tokens = [START_SYMBOL for i in range(n-1)]+tokens+[STOP_SYMBOL]
-        # n_gram_model = nltk.ngrams(tokens,n)
         n_gram_model = generate_ngram(tokens,n)
         if n != 1:
-            # n_1_gram_model = nltk.ngrams(tokens,n-1)
             n_1_gram_model = generate_ngram(tokens,n-1)
             n_1_gram_list.extend(n_1_gram_model)
 
@@ -47,7 +44,5 @@ def replace_low_freq_words(corpus):
     unigram_freq_dist = calc_freq_dist(unigram_list)
     words_to_replace = [k for k,v in unigram_freq_dist.items() if v <= UNK_THRESHOLD]
     replaced_regex = re.compile('|'.join(map(re.escape, words_to_replace)))
-    # replaced_corpus = [replaced_regex.sub(UNK_SYMBOL,sentence) for sentence in corpus]
-    replaced_corpus = replaced_regex.sub(UNK_SYMBOL, '<NEWLINE>'.join(corpus))
-    print 'New one done'
+    replaced_corpus = [replaced_regex.sub(UNK_SYMBOL,sentence) for sentence in corpus]
     return replaced_corpus
