@@ -40,6 +40,7 @@ def calc_interpolated_perplexity(corpus, lm):
 
     perplexity /= M
     perplexity = 2** (-1*perplexity)
+    return perplexity
 
 def interpolation_score(sentence, lm):
     scores = [calc_score(sentence, lm[i], i+1) for i in range(MAXIMUM_TRAIN_N_GRAM)]

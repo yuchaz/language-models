@@ -1,2 +1,6 @@
 **/*.pyc
 *.pyc
+
+output*
+output/*
+output/**/*
