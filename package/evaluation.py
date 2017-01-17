@@ -1,14 +1,12 @@
-from package.generate_ngram import generate_ngram
-START_SYMBOL = '*'
-STOP_SYMBOL = 'STOP'
+from package.generate_ngram import generate_ngram, preprocess_tokens
+
 MINUS_INFINITY_SENTENCE_LOG_PROB = -1000
 MAXIMUM_TRAIN_N_GRAM = 3
 INTERPOLATION_WEIGHT = [.33,.33,.34]
 
 
 def calc_score(sentence, ngram_lm, n):
-    tokens = sentence.split(' ')
-    tokens = [START_SYMBOL for i in range(n-1)]+tokens+[STOP_SYMBOL]
+    tokens = preprocess_tokens(sentence, n)
     ngrams_token = generate_ngram(tokens, n)
 
     score = .0

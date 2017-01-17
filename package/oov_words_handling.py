@@ -1,26 +1,18 @@
 import re
 from package.frequency_distribution import calc_freq_dist
+from package.generate_ngram import preprocess_tokens, replace_with_UNK
 import random
 
-STOP_SYMBOL = 'STOP'
-UNK_SYMBOL = '<UNK>'
 UNK_THRESHOLD = 5
-
 TOTAL_UNK_WORDS_PROB = 0.01
 OOV_AS_UNK_PROB = 0.7
 
 def replace_low_freq_words(corpus):
-    unigram_list = []
-    for sentence in corpus:
-        tokens = sentence.split(' ')+[STOP_SYMBOL]
-        unigram_list.extend(tokens)
+    unigram_list = [token for sentence in corpus for token in preprocess_tokens(sentence,1)]
     unigram_freq_dist = calc_freq_dist(unigram_list)
     vocabulary_size = len(unigram_list)
-    # words_to_replace = [k for k,v in unigram_freq_dist.items() if v <= UNK_THRESHOLD]
     words_to_replace = generate_replce_scheme(unigram_freq_dist, vocabulary_size)
-    replaced_regex = re.compile('|'.join(map(re.escape, words_to_replace)))
-    replaced_corpus = [replaced_regex.sub(UNK_SYMBOL,sentence) for sentence in corpus]
-    return replaced_corpus
+    return replace_with_UNK(corpus, words_to_replace)
 
 def generate_replce_scheme(unigram_freq_dist, vocabulary_size):
     unk_count = 0
