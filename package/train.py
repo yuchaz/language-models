@@ -3,19 +3,18 @@ import numpy
 import math
 from package.generate_ngram import generate_ngram
 from package.frequency_distribution import calc_freq_dist
+import re
+import pdb
 
 START_SYMBOL = '*'
 STOP_SYMBOL = 'STOP'
+UNK_SYMBOL = '<UNK>'
 MAXIMUM_TRAIN_N_GRAM = 3
+UNK_THRESHOLD = 3
 
 def train_language_models(corpus):
-    ngram_result = []
-    for n in range(MAXIMUM_TRAIN_N_GRAM):
-        n_gram_freq_dist,n_1_gram_freq_dist = train_ngram_model(corpus,n+1)
-        if n == 0:
-            ngram_result.append({k: math.log( float(v)/n_1_gram_freq_dist, 2) for k,v in n_gram_freq_dist.items()})
-        else:
-            ngram_result.append({k: math.log( float(v)/n_1_gram_freq_dist[tuple(k[:n])], 2) for k,v in n_gram_freq_dist.items()})
+    new_corpus = replace_low_freq_words(corpus)
+    ngram_result = [train_ngram_model(new_corpus,n+1) for n in range(MAXIMUM_TRAIN_N_GRAM)]
     return ngram_result[0],ngram_result[1],ngram_result[2]
 
 def train_ngram_model(corpus, n):
@@ -33,7 +32,22 @@ def train_ngram_model(corpus, n):
 
         n_gram_list.extend(n_gram_model)
 
+    n_gram_freq_dist = calc_freq_dist(n_gram_list)
     if n != 1:
-        return calc_freq_dist(n_gram_list), calc_freq_dist(n_1_gram_list)
+        n_1_gram_freq_dist = calc_freq_dist(n_1_gram_list)
+        return {k: math.log( float(v)/n_1_gram_freq_dist[tuple(k[:n-1])], 2) for k,v in n_gram_freq_dist.items()}
     else:
-        return calc_freq_dist(n_gram_list), len(n_gram_list)
+        return {k: math.log( float(v)/len(n_gram_list), 2) for k,v in n_gram_freq_dist.items()}
+
+def replace_low_freq_words(corpus):
+    unigram_list = []
+    for sentence in corpus:
+        tokens = sentence.split(' ')+[STOP_SYMBOL]
+        unigram_list.extend(tokens)
+    unigram_freq_dist = calc_freq_dist(unigram_list)
+    words_to_replace = [k for k,v in unigram_freq_dist.items() if v <= UNK_THRESHOLD]
+    replaced_regex = re.compile('|'.join(map(re.escape, words_to_replace)))
+    # replaced_corpus = [replaced_regex.sub(UNK_SYMBOL,sentence) for sentence in corpus]
+    replaced_corpus = replaced_regex.sub(UNK_SYMBOL, '<NEWLINE>'.join(corpus))
+    print 'New one done'
+    return replaced_corpus
