@@ -1,6 +1,7 @@
 import nltk
 import numpy
 import math
+from package.generate_ngram import generate_ngram
 
 START_SYMBOL = '*'
 STOP_SYMBOL = 'STOP'
@@ -22,9 +23,11 @@ def train_ngram_model(corpus, n):
     for sentence in corpus:
         tokens = sentence.split(' ')
         tokens = [START_SYMBOL for i in range(n-1)]+tokens+[STOP_SYMBOL]
-        n_gram_model = nltk.ngrams(tokens,n)
+        # n_gram_model = nltk.ngrams(tokens,n)
+        n_gram_model = generate_ngram(tokens,n)
         if n != 1:
-            n_1_gram_model = nltk.ngrams(tokens,n-1)
+            # n_1_gram_model = nltk.ngrams(tokens,n-1)
+            n_1_gram_model = generate_ngram(tokens,n-1)
             n_1_gram_list.extend(n_1_gram_model)
 
         n_gram_list.extend(n_gram_model)
