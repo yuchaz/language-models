@@ -21,7 +21,7 @@ def main():
         # perplexity_uni = calc_perplexity(dev_corpus, unigram_p, 1)
         # perplexity_bi = calc_perplexity(dev_corpus, bigram_p, 2)
         # perplexity_tri = calc_perplexity(dev_corpus, trigram_p, 3)
-        perplexity_interpolated = calc_interpolated_perplexity(corpus, lm)
+        perplexity_interpolated = calc_interpolated_perplexity(dev_corpus, language_models)
         print '\nPerplexity without interpolation for uni, bi, and trigram models are {}, {} and {}, respectively'.format(
             perplexity_orig[0], perplexity_orig[1], perplexity_orig[2]
         )
