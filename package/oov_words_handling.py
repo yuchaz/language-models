@@ -31,3 +31,6 @@ def generate_replce_scheme(unigram_freq_dist, vocabulary_size):
            random.uniform(0,1) < OOV_AS_UNK_PROB:
             words_to_replace.append(k)
     return words_to_replace
+
+def add_k_smoothing(numer, demon, vocab_size, k):
+    return (numer+k)/(demon+k*vocab_size)
