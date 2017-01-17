@@ -30,8 +30,18 @@ def calc_perplexity(corpus, ngram_lm, n):
 
     return perplexity
 
-def interpolation_score(sentence, uni, bi, tri):
-    lm = [uni, bi, tri]
+def calc_interpolated_perplexity(corpus, lm):
+    M = 0
+    perplexity = .0
+    for sentence in corpus:
+        score = interpolation_score(sentence, lm)
+        M += (len(sentence)+1)
+        perplexity += score
+
+    perplexity /= M
+    perplexity = 2** (-1*perplexity)
+
+def interpolation_score(sentence, lm):
     scores = [calc_score(sentence, lm[i], i+1) for i in range(MAXIMUM_TRAIN_N_GRAM)]
     interpolated_score = sum([scores[i]*INTERPOLATION_WEIGHT[i] for i in range(len(INTERPOLATION_WEIGHT))])
     return interpolated_score

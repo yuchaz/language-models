@@ -11,7 +11,7 @@ MAXIMUM_TRAIN_N_GRAM = 3
 def train_language_models(corpus):
     new_corpus = replace_low_freq_words(corpus)
     ngram_result = [train_ngram_model(new_corpus,n+1) for n in range(MAXIMUM_TRAIN_N_GRAM)]
-    return ngram_result[0],ngram_result[1],ngram_result[2]
+    return ngram_result
 
 def train_ngram_model(corpus, n):
     n_gram_list = []
