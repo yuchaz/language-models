@@ -1,11 +1,9 @@
 import numpy
 import math
-from package.generate_ngram import generate_ngram
+from package.generate_ngram import generate_ngram, preprocess_tokens
 from package.frequency_distribution import calc_freq_dist
 from package.oov_words_handling import replace_low_freq_words
 
-START_SYMBOL = '*'
-STOP_SYMBOL = 'STOP'
 MAXIMUM_TRAIN_N_GRAM = 3
 
 def train_language_models(corpus):
@@ -17,14 +15,12 @@ def train_ngram_model(corpus, n):
     n_gram_list = []
     n_1_gram_list = []
     for sentence in corpus:
-        tokens = sentence.split(' ')
-        tokens = [START_SYMBOL for i in range(n-1)]+tokens+[STOP_SYMBOL]
+        tokens = preprocess_tokens(sentence, n)
         n_gram_model = generate_ngram(tokens,n)
+        n_gram_list.extend(n_gram_model)
         if n != 1:
             n_1_gram_model = generate_ngram(tokens,n-1)
             n_1_gram_list.extend(n_1_gram_model)
-
-        n_gram_list.extend(n_gram_model)
 
     n_gram_freq_dist = calc_freq_dist(n_gram_list)
     if n != 1:
