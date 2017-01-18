@@ -1,7 +1,10 @@
+import math
 from package.generate_ngram import generate_ngram, preprocess_tokens
 import package.hyperparameter_parser as hp
 
-LOG_PROB_WHEN_NOT_FOUND = hp.parse_item_in_evaluation('log_prob_when_not_found')
+#LOG_PROB_WHEN_NOT_FOUND = hp.parse_item_in_evaluation('log_prob_when_not_found')
+LOG_PROB_WHEN_NOT_FOUND = math.log( hp.parse_item_in_unk('fraction_of_oov'),2)
+#import pdb; pdb.set_trace()
 MAX_NGRAMS_IN_LM = hp.parse_item_in_evaluation('max_ngrams_in_language_models')
 INTERPOLATION_WEIGHT = hp.parse_item_in_evaluation('interpolation_weight')
 
