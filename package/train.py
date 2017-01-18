@@ -6,8 +6,8 @@ from package.oov_words_handling import replace_low_freq_words
 
 MAXIMUM_TRAIN_N_GRAM = 3
 
-def train_language_models(corpus):
-    new_corpus = replace_low_freq_words(corpus)
+def train_language_models(corpus, hps_to_update={}):
+    new_corpus = replace_low_freq_words(corpus, hps_to_update)
     ngram_result = [train_ngram_model(new_corpus,n+1) for n in range(MAXIMUM_TRAIN_N_GRAM)]
     return ngram_result
 
