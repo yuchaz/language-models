@@ -1,8 +1,7 @@
 import json
 import ConfigParser
-import sys
 
-HYPER_PARAMETER_PATH = './hp.ini' if len(sys.argv) == 1 else sys.argv[1]
+HYPER_PARAMETER_PATH = './hp.ini'
 UNK_SECTION = 'unk'
 EVALUATION_SECTION = 'evaluation'
 
@@ -21,8 +20,7 @@ def parse_item_in_unk(parameter):
 def parse_item_in_evaluation(parameter):
     return parse_init_file(HYPER_PARAMETER_PATH,EVALUATION_SECTION,parameter)
 
-def parse_whole_section(section):
-    config = read_config(HYPER_PARAMETER_PATH)
+def parse_whole_section(section, config=read_config(HYPER_PARAMETER_PATH)):
     dic_to_conv = dict(config.items(section))
     return {k:json.loads(v) for k,v in dic_to_conv.items()}
 
@@ -31,3 +29,7 @@ def parse_unk_section():
 
 def parse_evaluation_section():
     return parse_whole_section(EVALUATION_SECTION)
+
+def parse_whole_updated_hps(path):
+    config = read_config(path)
+    return [parse_whole_section(section, config) for section in config.sections()]

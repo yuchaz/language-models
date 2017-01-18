@@ -2,11 +2,7 @@ import math
 from package.generate_ngram import generate_ngram, preprocess_tokens
 import package.hyperparameter_parser as hp
 
-#LOG_PROB_WHEN_NOT_FOUND = hp.parse_item_in_evaluation('log_prob_when_not_found')
 LOG_PROB_WHEN_NOT_FOUND = math.log( hp.parse_item_in_unk('fraction_of_oov'),2)
-#import pdb; pdb.set_trace()
-MAX_NGRAMS_IN_LM = hp.parse_item_in_evaluation('max_ngrams_in_language_models')
-INTERPOLATION_WEIGHT = hp.parse_item_in_evaluation('interpolation_weight')
 
 def calc_score(sentence, ngram_lm, n):
     tokens = preprocess_tokens(sentence, n)
@@ -31,11 +27,12 @@ def calc_perplexity(corpus, ngram_lm, n):
 
     return perplexity
 
-def calc_interpolated_perplexity(corpus, lm):
+def calc_interpolated_perplexity(corpus, lm, hps_to_update={}):
+    eval_hp = update_eval_hyperparameters(hps_to_update)
     M = 0
     perplexity = .0
     for sentence in corpus:
-        score = interpolation_score(sentence, lm)
+        score = interpolation_score(sentence, lm, eval_hp)
         M += (len(sentence)+1)
         perplexity += score
 
@@ -43,7 +40,12 @@ def calc_interpolated_perplexity(corpus, lm):
     perplexity = 2** (-1*perplexity)
     return perplexity
 
-def interpolation_score(sentence, lm):
-    scores = [calc_score(sentence, lm[i], i+1) for i in range(MAX_NGRAMS_IN_LM)]
-    interpolated_score = sum([scores[i]*INTERPOLATION_WEIGHT[i] for i in range(len(INTERPOLATION_WEIGHT))])
+def interpolation_score(sentence, lm, eval_hp):
+    scores = [calc_score(sentence, lm[i], i+1) for i in range(eval_hp['max_ngrams_in_language_models'])]
+    interpolated_score = sum([scores[i]*eval_hp['interpolation_weight'][i] for i in range(len(eval_hp['interpolation_weight']))])
     return interpolated_score
+
+def update_eval_hyperparameters(hps_to_update):
+    eval_hyperparameters = hp.parse_evaluation_section()
+    eval_hyperparameters.update(hps_to_update)
+    return eval_hyperparameters
