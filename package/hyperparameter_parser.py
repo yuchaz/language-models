@@ -1,7 +1,8 @@
 import json
 import ConfigParser
+import sys
 
-HYPER_PARAMETER_PATH = './hp.ini'
+HYPER_PARAMETER_PATH = './hp.ini' if len(sys.argv) == 1 else sys.argv[1]
 UNK_SECTION = 'unk'
 EVALUATION_SECTION = 'evaluation'
 
