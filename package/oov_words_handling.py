@@ -1,11 +1,12 @@
 import re
+import random
 from package.frequency_distribution import calc_freq_dist
 from package.generate_ngram import preprocess_tokens, replace_with_UNK
-import random
+import package.hyperparameter_parser as hp
 
-UNK_THRESHOLD = 5
-TOTAL_UNK_WORDS_PROB = 0.01
-OOV_AS_UNK_PROB = 0.7
+UNK_THRESHOLD = hp.parse_item_in_unk('unk_threshold')
+FRACTION_OF_OOV = hp.parse_item_in_unk('fraction_of_oov')
+CONVERT_OOV_TO_UNK_PROB = hp.parse_item_in_unk('convert_oov_to_unk_prob')
 
 def replace_low_freq_words(corpus):
     unigram_list = [token for sentence in corpus for token in preprocess_tokens(sentence,1)]
@@ -19,8 +20,8 @@ def generate_replce_scheme(unigram_freq_dist, vocabulary_size):
     words_to_replace = []
     for k,v in unigram_freq_dist.items():
         if v <= UNK_THRESHOLD and \
-           unk_count <= TOTAL_UNK_WORDS_PROB*vocabulary_size and \
-           random.uniform(0,1) < OOV_AS_UNK_PROB:
+           unk_count <= FRACTION_OF_OOV*vocabulary_size and \
+           random.uniform(0,1) < CONVERT_OOV_TO_UNK_PROB:
             words_to_replace.append(k)
     return words_to_replace
 
