@@ -2,7 +2,7 @@ from package import load
 from package.train import train_language_models
 from package.evaluation import calc_perplexity, calc_interpolated_perplexity
 from package.oov_words_handling import replace_low_freq_words
-from package.hyperparameter_parser import parse_whole_updated_hps
+from package.hyperparameter_parser import parse_whole_updated_hps, parse_unk_section, parse_evaluation_section
 import time
 import sys
 import json
@@ -23,11 +23,13 @@ def run_experiment(hps_to_update={}):
 def main():
     start = time.time()
     try:
+        print json.dumps(parse_unk_section())
+        print json.dumps(parse_evaluation_section())
         print 'hyperparameter\tperplexity_uni\tperplexity_bi\tperplexity_tri\tperplexity_inter'
         hps_to_update = [{}] if len(sys.argv) == 1 else parse_whole_updated_hps(sys.argv[1])
         for hps in hps_to_update:
             run_experiment(hps)
-        print 'Time spent is {} seconds'.format(time.time()-start)
+        print 'Time spent is {} seconds\n'.format(time.time()-start)
 
     except RuntimeError as error:
         print error
