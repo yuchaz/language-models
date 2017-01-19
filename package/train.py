@@ -23,8 +23,16 @@ def train_ngram_model(corpus, n):
             n_1_gram_list.extend(n_1_gram_model)
 
     n_gram_freq_dist = calc_freq_dist(n_gram_list)
+    vocabulary_size = get_vocabulary_size(corpus)
     if n != 1:
         n_1_gram_freq_dist = calc_freq_dist(n_1_gram_list)
-        return {k: math.log( float(v)/n_1_gram_freq_dist[tuple(k[:n-1])], 2) for k,v in n_gram_freq_dist.items()}
+        # return {k: math.log( float(v)/n_1_gram_freq_dist[tuple(k[:n-1])], 2) for k,v in n_gram_freq_dist.items()}
+        return n_gram_freq_dist, n_1_gram_freq_dist, vocabulary_size
     else:
-        return {k: math.log( float(v)/len(n_gram_list), 2) for k,v in n_gram_freq_dist.items()}
+        # return {k: math.log( float(v)/len(n_gram_list), 2) for k,v in n_gram_freq_dist.items()}
+        return n_gram_freq_dist, len(n_gram_list), vocabulary_size
+
+def get_vocabulary_size(corpus):
+    unigram_list = [token for sentence in corpus for token in preprocess_tokens(sentence,1)]
+    unigram_freq_dist = calc_freq_dist(unigram_list)
+    return len(unigram_freq_dist)

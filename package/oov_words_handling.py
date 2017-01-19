@@ -8,7 +8,7 @@ def replace_low_freq_words(corpus, hps_to_update={}):
     unk_hp = update_unk_hyperparameters(hps_to_update)
     unigram_list = [token for sentence in corpus for token in preprocess_tokens(sentence,1)]
     unigram_freq_dist = calc_freq_dist(unigram_list)
-    vocabulary_size = len(unigram_list)
+    vocabulary_size = len(unigram_freq_dist)
     words_to_replace = generate_replce_scheme(unigram_freq_dist, vocabulary_size, unk_hp)
     return replace_with_UNK(corpus, words_to_replace)
 
@@ -27,6 +27,3 @@ def generate_replce_scheme(unigram_freq_dist, vocabulary_size, unk_hp):
             words_to_replace.append(k)
             unk_count += 1
     return words_to_replace
-
-def add_k_smoothing(numer, demon, vocab_size, k):
-    return (numer+k)/(demon+k*vocab_size)
