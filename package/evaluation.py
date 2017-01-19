@@ -13,6 +13,8 @@ def calc_score(sentence, ngram_lm, n):
 
 def calc_probability(token, ngram_lm,n):
     numerator_count, denominator_count = get_numerator_and_denominator(token, ngram_lm, n)
+    if numerator_count==0 or denominator_count==0:
+        return -1000
     return math.log(float(numerator_count)/denominator_count,2)
 
 def get_numerator_and_denominator(token,ngram_lm,n):
@@ -23,14 +25,14 @@ def get_numerator_and_denominator(token,ngram_lm,n):
 def calc_add_k_score(sentence, ngram_lm, n, k):
     tokens = preprocess_tokens(sentence,n)
     ngrams_token = generate_ngram(tokens, n)
-    return sum([calc_add_k_probability(tokens,ngram_lm, n, k)])
+    return sum([calc_add_k_probability(token,ngram_lm, n, k) for token in ngrams_token])
 
 def calc_add_k_probability(token, ngram_lm, n, k):
-    vocab_size = ngram_lm[2]
-    numerator_count, denominator_count = get_add_k_numerator_and_denominator(token, ngram_lm, n,k,vocab_size)
+    numerator_count, denominator_count = get_add_k_numerator_and_denominator(token, ngram_lm, n,k)
     return math.log(float(numerator_count)/denominator_count,2)
 
-def get_add_k_numerator_and_denominator(token,ngram_lm,n,k,vocab_size):
+def get_add_k_numerator_and_denominator(token,ngram_lm,n,k):
+    vocab_size = ngram_lm[2]
     numerator_count, denominator_count = get_numerator_and_denominator(token, ngram_lm, n)
     return numerator_count+k, denominator_count+vocab_size*k
 
@@ -47,12 +49,12 @@ def calc_perplexity(corpus, ngram_lm, n, k=0):
 
     return perplexity
 
-def calc_interpolated_perplexity(corpus, lm, hps_to_update={}):
+def calc_interpolated_perplexity(corpus, lm, k=0, hps_to_update={}):
     eval_hp = update_eval_hyperparameters(hps_to_update)
     M = 0
     perplexity = .0
     for sentence in corpus:
-        score = interpolation_score(sentence, lm, eval_hp)
+        score = interpolation_score(sentence, lm, k, eval_hp)
         M += (len(sentence)+1)
         perplexity += score
 
@@ -60,10 +62,11 @@ def calc_interpolated_perplexity(corpus, lm, hps_to_update={}):
     perplexity = 2** (-1*perplexity)
     return perplexity
 
-def interpolation_score(sentence, lm, eval_hp):
-    scores = [calc_score(sentence, lm[i], i+1) for i in range(eval_hp['max_ngrams_in_language_models'])]
-    interpolated_score = sum([scores[i]*eval_hp['interpolation_weight'][i] for i in range(len(eval_hp['interpolation_weight']))])
-    return interpolated_score
+def interpolation_score(sentence, lm, k, eval_hp):
+    score = sum([2**calc_add_k_score(sentence, lm[i], i+1, k)*eval_hp['interpolation_weight'][i] for i in range(len(eval_hp['interpolation_weight']))])
+    if score == 0:
+        return -1000
+    return math.log(score,2)
 
 def update_eval_hyperparameters(hps_to_update):
     eval_hyperparameters = hp.parse_evaluation_section()
