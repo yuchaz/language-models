@@ -1,8 +1,13 @@
 [unk]
 unk_threshold: 5
-fraction_of_oov: 0.01
+fraction_of_oov: 0.005
 convert_oov_to_unk_prob: 0.7
 
 [evaluation]
-max_ngrams_in_language_models: 3
 interpolation_weight: [0.33, 0.33, 0.34]
+k_to_add: 2
+
+[constant]
+max_ngrams_in_language_models: 3
+count_when_not_found: 0
+log_prob_when_not_found: -1000

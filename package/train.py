@@ -3,8 +3,9 @@ import math
 from package.generate_ngram import generate_ngram, preprocess_tokens
 from package.frequency_distribution import calc_freq_dist
 from package.oov_words_handling import replace_low_freq_words
+import package.hyperparameter_parser as hp
 
-MAXIMUM_TRAIN_N_GRAM = 3
+MAXIMUM_TRAIN_N_GRAM = hp.parse_item_in_constant('max_ngrams_in_language_models')
 
 def train_language_models(corpus, hps_to_update={}):
     new_corpus = replace_low_freq_words(corpus, hps_to_update)

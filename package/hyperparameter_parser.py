@@ -4,6 +4,7 @@ import ConfigParser
 HYPER_PARAMETER_PATH = './hp.ini'
 UNK_SECTION = 'unk'
 EVALUATION_SECTION = 'evaluation'
+CONSTANT_SECTION = 'constant'
 
 def read_config(path):
     config = ConfigParser.SafeConfigParser()
@@ -20,6 +21,9 @@ def parse_item_in_unk(parameter):
 def parse_item_in_evaluation(parameter):
     return parse_init_file(HYPER_PARAMETER_PATH,EVALUATION_SECTION,parameter)
 
+def parse_item_in_constant(parameter):
+    return parse_init_file(HYPER_PARAMETER_PATH,CONSTANT_SECTION,parameter)
+
 def parse_whole_section(section, config=read_config(HYPER_PARAMETER_PATH)):
     dic_to_conv = dict(config.items(section))
     return {k:json.loads(v) for k,v in dic_to_conv.items()}
@@ -29,6 +33,9 @@ def parse_unk_section():
 
 def parse_evaluation_section():
     return parse_whole_section(EVALUATION_SECTION)
+
+def parse_constant_section():
+    return parse_whole_section(CONSTANT_SECTION)
 
 def parse_whole_updated_hps(path):
     config = read_config(path)
