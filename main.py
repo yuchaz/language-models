@@ -39,8 +39,6 @@ def main():
         type, value, tb = sys.exc_info()
         traceback.print_exc()
         pdb.post_mortem(tb)
-    # except RuntimeError as error:
-    #     print error
 
 
 if __name__ == '__main__':

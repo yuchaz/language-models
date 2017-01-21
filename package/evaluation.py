@@ -10,6 +10,26 @@ KEYS_SHOULDNOT_BE_UPDATED = [
     'log_prob_when_not_found'
 ]
 
+def calc_perplexity(corpus, ngram_lm, n, hps_to_update={}):
+    eval_hp = update_eval_hyperparameters(hps_to_update)
+    return general_perplexity_calculator(corpus,ngram_lm,n,eval_hp.get('k_to_add'))
+
+def calc_perplexity_without_k(corpus,ngram_lm, n):
+    return general_perplexity_calculator(corpus,ngram_lm,n)
+
+def general_perplexity_calculator(corpus,ngram_lm,n,k=0):
+    M = 0
+    perplexity = .0
+    for sentence in corpus:
+        score = calc_score(sentence, ngram_lm, n, k)
+        M += (len(sentence.split())+1)
+        perplexity += score
+
+    perplexity /= M
+    perplexity = 2 ** (-1*perplexity)
+
+    return perplexity
+
 def calc_score(sentence, ngram_lm, n, k=0):
     tokens = preprocess_tokens(sentence,n)
     ngrams_token = generate_ngram(tokens, n)
@@ -27,33 +47,13 @@ def get_numerator_and_denominator(token,ngram_lm,n,k):
     denominator_count = ngram_lm[1] if n==1 else ngram_lm[1].get(tuple(token[:n-1]), COUNT_WHEN_NOT_FOUND)
     return numerator_count+k, denominator_count+vocab_size*k
 
-def calc_perplexity(corpus, ngram_lm, n, hps_to_update={}):
-    eval_hp = update_eval_hyperparameters(hps_to_update)
-    return general_perplexity_calculator(corpus,ngram_lm,n,eval_hp.get('k_to_add'))
-
-def calc_perplexity_without_k(corpus,ngram_lm, n):
-    return general_perplexity_calculator(corpus,ngram_lm,n)
-
-def general_perplexity_calculator(corpus,ngram_lm,n,k=0):
-    M = 0
-    perplexity = .0
-    for sentence in corpus:
-        score = calc_score(sentence, ngram_lm, n, k)
-        M += (len(sentence)+1)
-        perplexity += score
-
-    perplexity /= M
-    perplexity = 2 ** (-1*perplexity)
-
-    return perplexity
-
 def calc_interpolated_perplexity(corpus, lm, hps_to_update={}):
     eval_hp = update_eval_hyperparameters(hps_to_update)
     M = 0
     perplexity = .0
     for sentence in corpus:
         score = interpolation_score(sentence, lm, eval_hp)
-        M += (len(sentence)+1)
+        M += (len(sentence.split())+1)
         perplexity += score
 
     perplexity /= M
