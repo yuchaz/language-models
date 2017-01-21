@@ -8,8 +8,7 @@ import package.hyperparameter_parser as hp
 MAXIMUM_TRAIN_N_GRAM = hp.parse_item_in_constant('max_ngrams_in_language_models')
 
 def train_language_models(corpus, hps_to_update={}):
-    new_corpus = replace_low_freq_words(corpus, hps_to_update)
-    ngram_result = [train_ngram_model(new_corpus,n+1) for n in range(MAXIMUM_TRAIN_N_GRAM)]
+    ngram_result = [train_ngram_model(corpus,n+1) for n in range(MAXIMUM_TRAIN_N_GRAM)]
     return ngram_result
 
 def train_ngram_model(corpus, n):
