@@ -5,9 +5,6 @@ TEST_CORPUS = CORPUS_PATH+'brown.test.txt'
 NEWLINE_CHAR = '\n'
 
 def load_corpus(path):
-    if path == TEST_CORPUS:
-        raise RuntimeError('You should not use test corpus at this time.')
-
     with open(path,'r') as infile:
         corpus = [line.rstrip(NEWLINE_CHAR) for line in infile]
     infile.close()
