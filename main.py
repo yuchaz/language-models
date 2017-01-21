@@ -13,7 +13,6 @@ def run_experiment(hps_to_update={}):
     training_corpus = load.load_traing_corpus()
     language_models = train_language_models(training_corpus,hps_to_update)
     dev_corpus_orig = load.load_dev_corpus()
-    # dev_corpus_orig = load.load_traing_corpus()
     dev_corpus = replace_low_freq_words(dev_corpus_orig,hps_to_update)
     perplexity_orig = [calc_perplexity_without_k(dev_corpus, language_models[i], i+1) for i in range(MAX_N_GRAM)]
     perplexity_add_k = [calc_perplexity(dev_corpus, language_models[i], i+1, hps_to_update) for i in range(MAX_N_GRAM)]
@@ -40,8 +39,6 @@ def main():
         type, value, tb = sys.exc_info()
         traceback.print_exc()
         pdb.post_mortem(tb)
-    # except RuntimeError as error:
-    #     print error
 
 
 if __name__ == '__main__':
