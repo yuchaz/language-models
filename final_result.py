@@ -17,7 +17,7 @@ def main():
     test_corpus_orig = load.load_test_corpus()
     test_corpus = replace_low_freq_words(test_corpus_orig, hps_to_update)
     perplexity = calc_interpolated_perplexity(test_corpus, language_models, hps_to_update)
-    print perplexity
+    print 'The perplexity is: {}'.format(perplexity)
 
 
 if __name__ == '__main__':

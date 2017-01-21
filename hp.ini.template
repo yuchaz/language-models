@@ -4,8 +4,8 @@ fraction_of_oov: 0.005
 convert_oov_to_unk_prob: 0.7
 
 [evaluation]
-interpolation_weight: [0.33, 0.33, 0.34]
-k_to_add: 2
+interpolation_weight: [0.4, 0.4, 0.2]
+k_to_add: 0.001
 
 [constant]
 max_ngrams_in_language_models: 3

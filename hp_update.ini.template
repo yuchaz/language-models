@@ -1,10 +1,35 @@
+[k1]
+k_to_add: 0.001
+[k2]
+k_to_add: 0.005
+[k3]
+k_to_add: 0.01
+[k4]
+k_to_add: 0.1
+[k5]
+k_to_add: 1
+[k6]
+k_to_add: 10
+[k7]
+k_to_add: 100
 [s1]
+k_to_add: 0
 interpolation_weight: [0.33, 0.33, 0.34]
 [s2]
+k_to_add: 0
 interpolation_weight: [0.2, 0.4, 0.4]
 [s3]
+k_to_add: 0
 interpolation_weight: [0.4, 0.2, 0.4]
 [s4]
+k_to_add: 0
 interpolation_weight: [0.4, 0.4, 0.2]
 [s5]
+k_to_add: 0
 interpolation_weight: [0.1, 0.45, 0.45]
+[s6]
+k_to_add: 0
+interpolation_weight: [0.45, 0.1, 0.45]
+[s7]
+k_to_add: 0
+interpolation_weight: [0.45, 0.45, 0.1]
