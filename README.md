@@ -9,5 +9,6 @@ To run get the final result, run
 `python final_result.py`
 It will output the perplexity by updating the base hyperparameter sets from `hp_final.ini`.
 
+**Be sure to run `pip install -r requirements.txt` to install the required packages**
 
-**Be sure to copy `hp_update.ini.template`, `hp_final.ini.template` and `hp.ini.template` to `hp_update.ini`, `hp_final.ini` and `hp.ini` if you clone from git**
+**Be sure to copy `hp_update.ini.template`, `hp_final.ini.template` and `hp.ini.template` to `hp_update.ini`, `hp_final.ini` and `hp.ini` if any of each are missing**
