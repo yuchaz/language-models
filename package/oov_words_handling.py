@@ -20,7 +20,7 @@ def update_unk_hyperparameters(hps_to_update):
 def generate_replce_scheme(unigram_freq_dist, vocabulary_size, unk_hp):
     unk_count = 0
     words_to_replace = []
-    for k,v in unigram_freq_dist.items():
+    for k,v in random.sample(unigram_freq_dist.items(), len(unigram_freq_dist)):
         if v <= unk_hp['unk_threshold'] and \
            unk_count <= unk_hp['fraction_of_oov']*vocabulary_size and \
            random.uniform(0,1) < unk_hp['convert_oov_to_unk_prob']:
