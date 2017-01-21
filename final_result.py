@@ -5,7 +5,7 @@ from package.oov_words_handling import replace_low_freq_words
 from package.hyperparameter_parser import parse_whole_updated_hps, parse_unk_section, parse_evaluation_section, parse_item_in_constant
 import json
 
-FINAL_HYPERPARAMETER_PATH = './hp.final.ini'
+FINAL_HYPERPARAMETER_PATH = './hp_final.ini'
 
 def main():
 
